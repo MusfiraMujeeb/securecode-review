@@ -41,3 +41,16 @@ https://github.com/MusfiraMujeeb/securecode-review/issues
 ## License
 
 MIT
+
+## Privacy
+
+SecureCode Review runs entirely locally within the VS Code extension host.
+
+- **No telemetry** — the extension does not collect or transmit usage statistics
+- **No network requests** — source code never leaves your machine
+- **No data storage** — no files are written outside the editor's in-memory diagnostics
+- **No analytics or tracking** — nothing is logged, reported, or shared
+
+All security analysis happens in-process, using only the content of files you
+have open in your workspace. The extension only modifies code when you
+explicitly accept a Quick Fix.
