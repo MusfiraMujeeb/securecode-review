@@ -31,16 +31,21 @@ Open any JavaScript or TypeScript file. Findings appear automatically with red/y
 
 ## Configuration
 
-(Coming soon) Toggle individual checks on or off via VS Code settings.
+SecureCode Review exposes four settings in VS Code's Settings (`Ctrl+,` → search "securecode"):
+
+| Setting | Default | Description |
+|---|---|---|
+| `securecode.enableEvalCheck` | `true` | Warn on `eval()` usage |
+| `securecode.enableJwtCheck` | `true` | Warn on JWT signed without `expiresIn` |
+| `securecode.enableCorsCheck` | `true` | Warn on CORS wildcard configuration |
+| `securecode.enableSecretCheck` | `true` | Warn on hardcoded secrets |
+
+Disable any check to silence its findings without uninstalling the extension.
 
 ## Feedback
 
 Found a bug or want a new check? Open an issue:
 https://github.com/MusfiraMujeeb/securecode-review/issues
-
-## License
-
-MIT
 
 ## Privacy
 
@@ -54,3 +59,9 @@ SecureCode Review runs entirely locally within the VS Code extension host.
 All security analysis happens in-process, using only the content of files you
 have open in your workspace. The extension only modifies code when you
 explicitly accept a Quick Fix.
+
+
+## License
+
+MIT
+
