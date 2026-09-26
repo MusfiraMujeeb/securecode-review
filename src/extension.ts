@@ -13,11 +13,21 @@ export function activate(context: vscode.ExtensionContext) {
     const diagnostics = vscode.languages.createDiagnosticCollection('securecode');
     context.subscriptions.push(diagnostics);
 
+    function getEnabledChecks(): Set<string> {
+        const config = vscode.workspace.getConfiguration('securecode');
+        const enabled = new Set<string>();
+        if (config.get<boolean>('enableEvalCheck', true)) { enabled.add('eval-usage'); }
+        if (config.get<boolean>('enableJwtCheck', true)) { enabled.add('jwt-no-expiry'); }
+        if (config.get<boolean>('enableCorsCheck', true)) { enabled.add('cors-wildcard'); }
+        if (config.get<boolean>('enableSecretCheck', true)) { enabled.add('hardcoded-secret'); }
+        return enabled;
+    }
+
     function updateDiagnostics(document: vscode.TextDocument): void {
         if (!SUPPORTED_LANGUAGES.includes(document.languageId)) {
             return;
         }
-        const issues = scanDocument(document);
+        const issues = scanDocument(document, getEnabledChecks());
         diagnostics.set(document.uri, issues);
     }
 
@@ -36,6 +46,15 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.workspace.onDidCloseTextDocument((document) =>
             diagnostics.delete(document.uri)
         )
+    );
+
+    // Re-scan all open files when settings change
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration((event) => {
+            if (event.affectsConfiguration('securecode')) {
+                vscode.workspace.textDocuments.forEach((doc) => updateDiagnostics(doc));
+            }
+        })
     );
 
     // Register Quick Fix provider
@@ -58,7 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
                 return;
             }
             updateDiagnostics(editor.document);
-            const count = scanDocument(editor.document).length;
+            const count = scanDocument(editor.document, getEnabledChecks()).length;
             if (count === 0) {
                 vscode.window.showInformationMessage(
                     'SecureCode Review: No issues found.'

@@ -61,7 +61,10 @@ export const securityChecks: SecurityCheck[] = [
     }
 ];
 
-export function scanDocument(document: vscode.TextDocument): vscode.Diagnostic[] {
+export function scanDocument(
+    document: vscode.TextDocument,
+    enabledIds?: Set<string>
+): vscode.Diagnostic[] {
     const diagnostics: vscode.Diagnostic[] = [];
     const lineCount = document.lineCount;
 
@@ -80,6 +83,9 @@ export function scanDocument(document: vscode.TextDocument): vscode.Diagnostic[]
         }
 
         for (const check of securityChecks) {
+            if (enabledIds && !enabledIds.has(check.id)) {
+                continue;
+            }
             const match = check.test(text);
             if (match && match.index !== undefined) {
                 const start = new vscode.Position(i, match.index);

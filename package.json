@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/MusfiraMujeeb/securecode-review.git"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -32,7 +32,32 @@
         "command": "securecode.helloWorld",
         "title": "SecureCode: Hello World"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "SecureCode Review",
+      "properties": {
+        "securecode.enableEvalCheck": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when eval() is used (arbitrary code execution risk)."
+        },
+        "securecode.enableJwtCheck": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when JWT is signed without an expiresIn option."
+        },
+        "securecode.enableCorsCheck": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when CORS is configured with a wildcard or no origin."
+        },
+        "securecode.enableSecretCheck": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when hardcoded secrets are detected."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
